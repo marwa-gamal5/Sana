@@ -8,12 +8,12 @@ function SectionOne() {
     <div className="relative bg-gradient-to-r from-purple-600 to-blue-600 h-screen text-white overflow-hidden">
   <div className="absolute inset-0">
   
-    <Image src={img} alt="Background Image" class="object-cover object-center w-full h-full" />
-    {/* <div class="absolute inset-0 bg-black opacity-50"></div> */}
+    <Image src={img} alt="Background Image" className="object-cover object-center w-full h-full" />
+
     <div className="absolute inset-0 "></div>
   </div>
   
-  <div class="relative z-10 flex flex-col justify-center items-center h-full text-center">
+  <div className="relative z-10 flex flex-col justify-center items-center h-full text-center">
     
  
        <div className="font-Poppins md:text-7xl text-[35px] font-semibold leading-tight text-[#fff] mb-10">

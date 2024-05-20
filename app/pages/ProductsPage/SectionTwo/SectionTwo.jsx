@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState ,useEffect } from 'react';
 import Image from "next/image";
 import img from "@/public/Img/1.png";
 import img2 from "@/public/Img/2.png";
@@ -23,10 +23,11 @@ import Link from 'next/link';
 
 import { RiShoppingBagLine } from "react-icons/ri";
 import { FaFilter } from "react-icons/fa6";
-
-import ReactDOM from 'react-dom';
+import { MdOutlineFavorite } from "react-icons/md";
+import { MdFavoriteBorder } from "react-icons/md";
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
+import axiosInstance from "@/app/Network/axiosInstance";
 
 const SectionTwo = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(true);
@@ -57,12 +58,54 @@ const SectionTwo = () => {
 
 
     const [open, setOpen] = useState(false);
-
+    const [product, setProduct] = useState([]);
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
+    // State to toggle between favorite icons
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    // Function to toggle the favorite icon
+    const toggleFavorite = () => {
+        setIsFavorite(!isFavorite);
+    };
+    const [categories, setCategories] = useState([]);
+    // function to show view Categories
+    const viewAllCategories = async () => {
+        await axiosInstance.post('store/view_all_categories', {
+            lang: 'en',
+        }).then(res => {
+            const translatedCategories = res.data.success.map(category => category.trans);
+            setCategories(translatedCategories);
+            console.log(translatedCategories,"categoriesddddq")
+        }).catch((err) => {
+            console.log("err", err)
+        });
+    }
+
+// function to view all Product
+    const viewAllProduct = async () => {
+        await axiosInstance.post('store/view_all_products', {
+            lang: 'en',
+        }).then(res => {
+            const AllProduct = res.data.success.map(product => product.product);
+            setProduct(AllProduct);
+
+            console.log(AllProduct,"AllProducttttttt")
+        }).catch((err) => {
+            console.log("err", err)
+        });
+    }
+
+
+    useEffect(() => {
+        viewAllCategories()
+        viewAllProduct()
+
+    }, []);
 
     return (
         <>
+
             <Modal open={open} onClose={onCloseModal} center>
                 <div className='p-10 '>
 
@@ -81,8 +124,7 @@ const SectionTwo = () => {
                             </svg>
                         </button>
 
-                        <div id="dropdownDefaultCheckbox"
-                             className={`z-10 ${isDropdownOpen ? 'block' : 'hidden'} w-48 bg-white divide-y divide-gray-100 rounded-lg  `}>
+                        <div id="dropdownDefaultCheckbox" className={`z-10 ${isDropdownOpen ? 'block' : 'hidden'} w-48 bg-white divide-y divide-gray-100 rounded-lg  `}>
                             <ul className=" space-y-3 text-sm text-gray-700 "
                                 aria-labelledby="dropdownCheckboxButton">
                                 <li>
@@ -276,54 +318,22 @@ const SectionTwo = () => {
 
                             <div id="dropdownDefaultCheckbox"
                                  className={`z-10 ${isDropdownOpen ? 'block' : 'hidden'} w-48 bg-white divide-y divide-gray-100 rounded-lg  `}>
-                                <ul className=" space-y-3 text-sm text-gray-700 "
+                                <ul className="space-y-3 text-sm text-gray-700"
                                     aria-labelledby="dropdownCheckboxButton">
-                                    <li>
-                                        <div className="flex items-center">
-                                            <input id="checkbox-item-1" type="checkbox" value=""
-                                                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
-                                            <label htmlFor="checkbox-item-1"
-                                                   className=" ms-2 text-xl font-normal  text-[#1A191F]  ">Mozzarella
-                                                (8)</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <input id="checkbox-item-2" type="checkbox" value=""
-                                                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
-                                            <label htmlFor="checkbox-item-2"
-                                                   className="ms-2 text-xl font-normal  text-[#1A191F]     ">Burrata
-                                                (2)</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <input id="checkbox-item-3" type="checkbox" value=""
-                                                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
-                                            <label htmlFor="checkbox-item-3"
-                                                   className="ms-2 text-xl font-normal  text-[#1A191F]  ">Ricotta cream
-                                                (2)</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <input id="checkbox-item-5" type="checkbox" value=""
-                                                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
-                                            <label htmlFor="checkbox-item-5"
-                                                   className="ms-2 text-xl font-normal  text-[#1A191F]  ">Ricotta (2)
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <input id="checkbox-item-4" type="checkbox" value=""
-                                                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
-                                            <label htmlFor="checkbox-item-4"
-                                                   className="ms-2 text-xl font-normal  text-[#1A191F]  ">Stracciatella
-                                                (2)</label>
-                                        </div>
-                                    </li>
+                                    {categories.map((category, index) => (
+
+                                        <li key={index}>
+                                            <div className="flex items-center">
+                                                <input id={`checkbox-item-${index + 1}`} type="checkbox" value=""
+                                                       className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
+                                                <label htmlFor={`checkbox-item-${index + 1}`}
+                                                       className="ms-2 text-xl font-normal text-[#1A191F]">{category.name}</label>
+
+                                            </div>
+                                        </li>
+                                    ))}
                                 </ul>
+
                             </div>
                         </div>
 
@@ -336,7 +346,7 @@ const SectionTwo = () => {
                                 Dietary
                                 <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                      fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                           stroke-width="2" d="m1 1 4 4 4-4"/>
                                 </svg>
                             </button>
@@ -386,6 +396,10 @@ const SectionTwo = () => {
                         <div key={index}
                              className="relative hover:scale-[1.02] m-5 w-full max-w-xs overflow-hidden rounded-lg bg-white shadow-md">
                             <Image className="h-60 w-full object-cover object-end" src={item.image} alt={item.title}/>
+                            <div className="absolute top-0 left-0 p-2">
+                                {isFavorite ? <MdOutlineFavorite className='text-5xl rounded-full bg-gray-100 p-2 text-[#d62923]' onClick={toggleFavorite}/> :
+                                    <MdFavoriteBorder className='text-5xl rounded-full bg-gray-100 p-2 text-[#d62923] '  onClick={toggleFavorite}/>}
+                            </div>
                             <span
                                 className="absolute top-0 right-0 px-3 py-1 rounded-lg translate-y-4 bg-[#D62923] text-center text-sm text-white">New</span>
                             <div className="mt-4 px-5 pb-5">
@@ -412,7 +426,7 @@ const SectionTwo = () => {
                                         <Link href="/Products/productDetails">
                                         <span
                                             className="text-2xl text-[#DA2E1F] font-semibold font-Inter">{item.price}</span>
-                                    </Link>
+                                        </Link>
                                     </p>
                                 </div>
                             </div>
